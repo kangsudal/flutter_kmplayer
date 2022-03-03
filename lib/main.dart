@@ -54,7 +54,9 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         title: Text(widget.title),
       ),
-      body: PermissionWidget(counter: _counter, accessible: _accessible),
+      body: NoPermissionWidget(
+        counter: _counter,
+      ),
       floatingActionButton: FloatingActionButton(
         onPressed: _incrementCounter,
         tooltip: 'Increment',
@@ -88,50 +90,43 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 }
 
-class PermissionWidget extends StatelessWidget {
-  const PermissionWidget({
+class NoPermissionWidget extends StatelessWidget {
+  const NoPermissionWidget({
     Key key,
     @required int counter,
-    @required bool accessible,
   })  : _counter = counter,
-        _accessible = accessible,
         super(key: key);
 
   final int _counter;
-  final bool _accessible;
 
   @override
   Widget build(BuildContext context) {
-    if (_accessible == true) {
-      Text("show permission granted repository tree");
-    } else {
-      return Padding(
-        padding: const EdgeInsets.all(50.0),
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Text(
-                '비디오와 오디오를 재생하고 자막을 보기 위해서는, 장치의 모든 파일에 접근해야 합니다.',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                ),
-                textAlign: TextAlign.center,
+    return Padding(
+      padding: const EdgeInsets.all(50.0),
+      child: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Text(
+              '비디오와 오디오를 재생하고 자막을 보기 위해서는, 장치의 모든 파일에 접근해야 합니다.',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
               ),
-              Text(
-                '$_counter',
-                style: Theme.of(context).textTheme.headline4,
-              ),
-              ElevatedButton(
-                onPressed: () {
-                  AppSettings.openAppSettings();
-                },
-                child: Text("접근 권한 요청"),
-              ),
-            ],
-          ),
+              textAlign: TextAlign.center,
+            ),
+            Text(
+              '$_counter',
+              style: Theme.of(context).textTheme.headline4,
+            ),
+            ElevatedButton(
+              onPressed: () {
+                AppSettings.openAppSettings();
+              },
+              child: Text("접근 권한 요청"),
+            ),
+          ],
         ),
-      );
-    }
+      ),
+    );
   }
 }
