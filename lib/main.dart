@@ -1,6 +1,8 @@
 import 'package:app_settings/app_settings.dart';
 import 'package:flutter/material.dart';
 
+import 'flutterdemo.dart';
+
 void main() {
   runApp(MyApp());
 }
@@ -14,7 +16,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.deepPurple,
       ),
-      home: MyHomePage(title: 'Player'),
+      home: FlutterDemo(storage: CounterStorage()),//MyHomePage(title: 'Player'),
       actions: Map(),
     );
   }
