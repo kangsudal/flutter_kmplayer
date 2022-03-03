@@ -33,11 +33,11 @@ class CounterStorage {
     }
   }//4.Read data from the file
 
-  Future<File> writeCounter(int counter) async {
+  void writeCounter(int counter) async {
     final file = await _localFile;
 
     // 파일 쓰기
-    return file.writeAsString('$counter');
+    file.writeAsString('$counter');
   }//3.Write data to the file
 }
 
@@ -63,13 +63,13 @@ class _FlutterDemoState extends State<FlutterDemo> {
     });
   }
 
-  Future<File> _incrementCounter() {
+  void _incrementCounter() {
     setState(() {
       _counter++;
     });
 
     // 파일에 String 타입으로 변수 값 쓰기
-    return widget.storage.writeCounter(_counter);
+    widget.storage.writeCounter(_counter);
   }
 
   @override
