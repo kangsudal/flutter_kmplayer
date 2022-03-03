@@ -10,14 +10,22 @@ class CounterStorage {
     final directory = await getApplicationDocumentsDirectory();
 
     return directory.path;
-  }//1.Find the correct local path
+  } //1.Find the correct local path
+
+  void _listFiles() async {
+    final directory = await getApplicationDocumentsDirectory();
+
+    await for (var entity
+        in directory.list(recursive: false, followLinks: false)) {
+      print(entity.path);
+    }
+  } //List the entries of a directory
 
   Future<File> get _localFile async {
     final path = await _localPath;
 
-    print(path);
     return File('$path/counter.txt');
-  }//2.Create a reference to the file location
+  } //2.Create a reference to the file location
 
   Future<int> readCounter() async {
     try {
@@ -31,14 +39,14 @@ class CounterStorage {
       // 에러가 발생할 경우 0을 반환
       return 0;
     }
-  }//4.Read data from the file
+  } //4.Read data from the file
 
   void writeCounter(int counter) async {
     final file = await _localFile;
 
     // 파일 쓰기
     file.writeAsString('$counter');
-  }//3.Write data to the file
+  } //3.Write data to the file
 }
 
 class FlutterDemo extends StatefulWidget {
@@ -52,6 +60,8 @@ class FlutterDemo extends StatefulWidget {
 
 class _FlutterDemoState extends State<FlutterDemo> {
   int _counter;
+  String _path = '경로String';
+  int _numOfFiles = -1;
 
   @override
   void initState() {
@@ -61,6 +71,14 @@ class _FlutterDemoState extends State<FlutterDemo> {
         _counter = value;
       });
     });
+
+    widget.storage._localPath.then((String value) {
+      setState(() {
+        _path = value;
+      });
+    });
+
+    widget.storage._listFiles();
   }
 
   void _incrementCounter() {
@@ -74,7 +92,7 @@ class _FlutterDemoState extends State<FlutterDemo> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+/*    return Scaffold(
       appBar: AppBar(title: Text('Reading and Writing Files')),
       body: Center(
         child: Text(
@@ -86,6 +104,21 @@ class _FlutterDemoState extends State<FlutterDemo> {
         tooltip: 'Increment',
         child: Icon(Icons.add),
       ),
+    );
+
+ */
+    return Scaffold(
+      appBar: AppBar(title: Text('Reading and Writing Files')),
+      body: Center(
+        child: Text(
+          'Path: $_path have $_numOfFiles files',
+        ),
+      ),
+      // floatingActionButton: FloatingActionButton(
+      //   onPressed: _incrementCounter,
+      //   tooltip: 'Increment',
+      //   child: Icon(Icons.add),
+      // ),
     );
   }
 }
