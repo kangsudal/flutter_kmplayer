@@ -12,15 +12,6 @@ class CounterStorage {
     return directory.path;
   } //1.Find the correct local path
 
-  void _listFiles() async {
-    final directory = await getApplicationDocumentsDirectory();
-
-    await for (var entity
-        in directory.list(recursive: false, followLinks: false)) {
-      print(entity.path);
-    }
-  } //List the entries of a directory
-
   Future<File> get _localFile async {
     final path = await _localPath;
 
@@ -47,6 +38,23 @@ class CounterStorage {
     // 파일 쓰기
     file.writeAsString('$counter');
   } //3.Write data to the file
+
+  //추가 메서드
+
+  Future<List<FileSystemEntity>> _listFiles() async {
+    final List<FileSystemEntity> list = [];
+    final directory = await getApplicationDocumentsDirectory();
+
+    await for (var entity
+        in directory.list(recursive: false, followLinks: false)) {
+      list.add(entity);
+      // print("${entity.path} is added");
+    }
+
+    // print(list);
+
+    return list;
+  } //List the entries of a directory
 }
 
 class FlutterDemo extends StatefulWidget {
@@ -62,6 +70,7 @@ class _FlutterDemoState extends State<FlutterDemo> {
   int _counter;
   String _path = '경로String';
   int _numOfFiles = -1;
+  List<FileSystemEntity> _files = [];
 
   @override
   void initState() {
@@ -78,7 +87,12 @@ class _FlutterDemoState extends State<FlutterDemo> {
       });
     });
 
-    widget.storage._listFiles();
+    widget.storage._listFiles().then((value) {
+      setState(() {
+        _files = value;
+        _numOfFiles = value.length;
+      });
+    });
   }
 
   void _incrementCounter() {
@@ -109,10 +123,11 @@ class _FlutterDemoState extends State<FlutterDemo> {
  */
     return Scaffold(
       appBar: AppBar(title: Text('Reading and Writing Files')),
-      body: Center(
-        child: Text(
-          'Path: $_path have $_numOfFiles files',
-        ),
+      body: ListView.builder(
+        itemBuilder: (context, index) {
+          return Card(child: Text(_files[index].toString()));
+        },
+        itemCount: _files.length,
       ),
       // floatingActionButton: FloatingActionButton(
       //   onPressed: _incrementCounter,
