@@ -54,7 +54,7 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         title: Text(widget.title),
       ),
-      body: NoPermissionWidget(
+      body: PermissionWidget(
         counter: _counter,
       ),
       floatingActionButton: FloatingActionButton(
@@ -125,6 +125,29 @@ class NoPermissionWidget extends StatelessWidget {
               child: Text("접근 권한 요청"),
             ),
           ],
+        ),
+      ),
+    );
+  }
+}
+
+class PermissionWidget extends StatelessWidget {
+  const PermissionWidget({
+    Key key,
+    @required int counter,
+  })  : _counter = counter,
+        super(key: key);
+
+  final int _counter;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(50.0),
+      child: Center(
+        child: Text(
+          '$_counter',
+          style: Theme.of(context).textTheme.headline4,
         ),
       ),
     );
