@@ -39,22 +39,8 @@ class CounterStorage {
     file.writeAsString('$counter');
   } //3.Write data to the file
 
-  //추가 메서드
+//추가 메서드
 
-  Future<List<FileSystemEntity>> _listFiles() async {
-    final List<FileSystemEntity> list = [];
-    final directory = await getApplicationDocumentsDirectory();
-
-    await for (var entity
-        in directory.list(recursive: false, followLinks: false)) {
-      list.add(entity);
-      // print("${entity.path} is added");
-    }
-
-    // print(list);
-
-    return list;
-  } //List the entries of a directory
 }
 
 class FlutterDemo extends StatefulWidget {
@@ -68,9 +54,8 @@ class FlutterDemo extends StatefulWidget {
 
 class _FlutterDemoState extends State<FlutterDemo> {
   int _counter;
-  String _path = '경로String';
-  int _numOfFiles = -1;
-  List<FileSystemEntity> _files = [];
+  String _localPath = '경로String';
+  List<File> _files = [];
 
   @override
   void initState() {
@@ -83,16 +68,12 @@ class _FlutterDemoState extends State<FlutterDemo> {
 
     widget.storage._localPath.then((String value) {
       setState(() {
-        _path = value;
+        _localPath = value;
       });
     });
 
-    widget.storage._listFiles().then((value) {
-      setState(() {
-        _files = value;
-        _numOfFiles = value.length;
-      });
-    });
+    _files = [File('$_localPath/1.txt'),File('$_localPath/2.txt'),File('$_localPath/3.txt'),];
+
   }
 
   void _incrementCounter() {
@@ -106,34 +87,30 @@ class _FlutterDemoState extends State<FlutterDemo> {
 
   @override
   Widget build(BuildContext context) {
-/*    return Scaffold(
+    return Scaffold(
       appBar: AppBar(title: Text('Reading and Writing Files')),
-      body: Center(
-        child: Text(
-          'Button tapped $_counter time${_counter == 1 ? '' : 's'}.',
-        ),
+      body: Column(
+        children: [
+          Text("현재 경로:"),
+          Expanded(
+            child: ListView.builder(
+              itemBuilder: (context, index) {
+                return Card(
+                  child: Text(
+                    _files[index].path,
+                  ),
+                );
+              },
+              itemCount: _files.length,
+            ),
+          ),
+        ],
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: _incrementCounter,
         tooltip: 'Increment',
         child: Icon(Icons.add),
       ),
-    );
-
- */
-    return Scaffold(
-      appBar: AppBar(title: Text('Reading and Writing Files')),
-      body: ListView.builder(
-        itemBuilder: (context, index) {
-          return Card(child: Text(_files[index].toString()));
-        },
-        itemCount: _files.length,
-      ),
-      // floatingActionButton: FloatingActionButton(
-      //   onPressed: _incrementCounter,
-      //   tooltip: 'Increment',
-      //   child: Icon(Icons.add),
-      // ),
     );
   }
 }
